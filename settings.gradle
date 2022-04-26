@@ -1,0 +1,3 @@
+rootProject.name = "DataUtils"
+include ':app'
+include ':datautils'
