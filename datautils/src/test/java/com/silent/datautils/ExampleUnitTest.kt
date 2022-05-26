@@ -13,4 +13,9 @@ class ExampleUnitTest {
     fun encrypt() {
         println(DataUtils.toHexString(byteArrayOf(1, 2, 3, 4, 5, 6, 7)))
     }
+
+    @Test
+    fun decrypt() {
+        println(DataUtils.toHexString(byteArrayOf(1, 2, 3, 4, 5, 6, 7)))
+    }
 }
