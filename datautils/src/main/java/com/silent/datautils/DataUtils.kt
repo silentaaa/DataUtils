@@ -51,10 +51,6 @@ object DataUtils {
         return Hex.decode(data)
     }
 
-    object MODE {
-        const val AES_CBC_Nothing = "AES/CBC/Nothing"
-    }
-
     /**
      * 加密
      * @param data 明文
@@ -77,7 +73,15 @@ object DataUtils {
                     IvParameterSpec(Hex.decode(iv))
                 )// 初始化
             }
-            cipher.doFinal(data) // 加密
+            val blockSize = cipher.blockSize
+            var plaintextLength = data.size
+            if (plaintextLength % blockSize != 0) {
+                plaintextLength += (blockSize - plaintextLength % blockSize)
+            }
+            val plaintext = ByteArray(plaintextLength)
+            if (plaintextLength > data.size) plaintext[data.size] = 0x80.toByte() //填充数据为0x80后加0x00
+            System.arraycopy(data, 0, plaintext, 0, data.size)
+            cipher.doFinal(plaintext) // 加密
         } catch (e: Exception) {
             e.printStackTrace()
             return ByteArray(0)
