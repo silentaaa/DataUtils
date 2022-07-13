@@ -100,12 +100,12 @@ object DataUtils {
             val cipher = Cipher.getInstance(mode) // 创建密码器
             if (null == iv) {
                 cipher.init(
-                    Cipher.ENCRYPT_MODE,
+                    Cipher.DECRYPT_MODE,
                     secretKey
                 ) // 初始化
             } else {
                 cipher.init(
-                    Cipher.ENCRYPT_MODE,
+                    Cipher.DECRYPT_MODE,
                     secretKey,
                     IvParameterSpec(Hex.decode(iv))
                 )// 初始化

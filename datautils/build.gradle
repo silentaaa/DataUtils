@@ -44,5 +44,3 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'org.bouncycastle:bcpg-jdk15on:1.52'
 }
-
-//apply from: "${getRootDir().absolutePath}/gradles/publish-maven.gradle"
