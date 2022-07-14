@@ -4,8 +4,9 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.util.encoders.Hex
 import java.io.File
 import java.io.FileInputStream
-import java.security.MessageDigest
-import java.security.Security
+import java.math.BigInteger
+import java.security.*
+import java.security.spec.RSAPublicKeySpec
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -55,21 +56,22 @@ object DataUtils {
      * 加密
      * @param data 明文
      * @param key  密钥
+     * @param mode  模式
+     * @param iv  偏移量
      */
-    fun encrypt(data: ByteArray, key: ByteArray, mode: String, iv: String? = null): ByteArray {
+    fun encrypt(data: ByteArray, key: Key, mode: String, iv: String? = null): ByteArray {
         return try {
             Security.addProvider(BouncyCastleProvider())
-            val secretKey = SecretKeySpec(key, mode)
             val cipher = Cipher.getInstance(mode) // 创建密码器
             if (null == iv) {
                 cipher.init(
                     Cipher.ENCRYPT_MODE,
-                    secretKey
+                    key
                 ) // 初始化
             } else {
                 cipher.init(
                     Cipher.ENCRYPT_MODE,
-                    secretKey,
+                    key,
                     IvParameterSpec(Hex.decode(iv))
                 )// 初始化
             }
@@ -89,9 +91,40 @@ object DataUtils {
     }
 
     /**
+     * 加密
+     * @param data 明文
+     * @param key  密钥
+     * @param mode  模式
+     * @param iv  偏移量
+     */
+    fun encrypt(data: ByteArray, key: ByteArray, mode: String, iv: String? = null): ByteArray {
+        return encrypt(data, SecretKeySpec(key, mode), mode, iv)
+    }
+
+    /**
+     * 加密
+     * @param data 明文
+     * @param modulus    n
+     * @param publicExponent   e
+     * @param mode  模式
+     * @param iv  偏移量
+     */
+    fun encrypt(
+        data: ByteArray,
+        modulus: ByteArray,
+        publicExponent: ByteArray,
+        mode: String,
+        iv: String? = null
+    ): ByteArray {
+        return encrypt(data, getPublicKey(modulus, publicExponent), mode, iv)
+    }
+
+    /**
      * 解密
      * @param data 密文
      * @param key  密钥
+     * @param mode  模式
+     * @param iv  偏移量
      */
     fun decrypt(data: ByteArray, key: ByteArray, mode: String, iv: String? = null): ByteArray {
         return try {
@@ -115,5 +148,18 @@ object DataUtils {
             e.printStackTrace()
             return ByteArray(0)
         }
+    }
+
+    /**
+     * 使用n、e值还原公钥
+     * @param modulus    n
+     * @param publicExponent   e
+     */
+    private fun getPublicKey(modulus: ByteArray, publicExponent: ByteArray): PublicKey {
+        val bigIntModulus = BigInteger(1, modulus)
+        val bigIntPrivateExponent = BigInteger(1, publicExponent)
+        val keySpec = RSAPublicKeySpec(bigIntModulus, bigIntPrivateExponent)
+        val keyFactory = KeyFactory.getInstance("RSA")
+        return keyFactory.generatePublic(keySpec)
     }
 }

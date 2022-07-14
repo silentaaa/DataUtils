@@ -1,5 +1,7 @@
 package com.silent.datautils
 
+import com.silent.datautils.DataUtils.encrypt
+import com.silent.datautils.DataUtils.toHexString
 import org.junit.Test
 
 /**
@@ -11,11 +13,19 @@ class ExampleUnitTest {
 
     @Test
     fun encrypt() {
-        println(DataUtils.toHexString(byteArrayOf(1, 2, 3, 4, 5, 6, 7)))
+        println(
+            toHexString(
+                encrypt(
+                    byteArrayOf(1, 2, 3, 4, 5, 6, 7),
+                    byteArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16),
+                    "AES/ECB/NoPadding"
+                )
+            )
+        )
     }
 
     @Test
     fun decrypt() {
-        println(DataUtils.toHexString(byteArrayOf(1, 2, 3, 4, 5, 6, 7)))
+        println(toHexString(byteArrayOf(1, 2, 3, 4, 5, 6, 7)))
     }
 }
