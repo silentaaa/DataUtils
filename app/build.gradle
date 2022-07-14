@@ -7,7 +7,7 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        applicationId "com.silent.datautils"
+        applicationId "com.silent.datautils.demo"
         minSdkVersion 28
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 28
@@ -35,6 +35,7 @@ android {
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    //noinspection GradleDependency
     implementation 'androidx.core:core-ktx:1.6.0'
     //noinspection GradleDependency
     implementation 'androidx.appcompat:appcompat:1.3.0'
